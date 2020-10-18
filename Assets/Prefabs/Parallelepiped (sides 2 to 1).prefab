@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 9076125974463603193}
   - component: {fileID: 7960790214282117744}
   - component: {fileID: 5700686016554582281}
-  m_Layer: 0
-  m_Name: Parallelepiped (2_1)
+  m_Layer: 9
+  m_Name: Parallelepiped (sides 2 to 1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,9 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d55ee906c0c1b41834320770021ae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whatIsNotPlane:
+  whatIsInteractive:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 512
 --- !u!65 &7960790214282117744
 BoxCollider:
   m_ObjectHideFlags: 0

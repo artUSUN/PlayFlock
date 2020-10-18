@@ -1,12 +1,11 @@
-﻿using PlayFlock;
+﻿using PlayFlock.GameLogic;
 using UnityEngine;
 
 namespace PlayFlock
 {
-    public class Parallelepiped : MonoBehaviour, ISpawnable
+    public class Parallelepiped : MonoBehaviour, ISpawnable, IRelocateable
     {
-        [SerializeField] private LayerMask whatIsNotPlane;
-
+        [SerializeField] private LayerMask whatIsInteractive;
         private Renderer rend;
 
         private void Start()
@@ -15,11 +14,11 @@ namespace PlayFlock
             rend.material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f));
         }
 
-        public bool TrySpawn(Vector3 coordinates)
+        public bool TryPlace(Vector3 coordinates)
         {
             return !Physics.CheckBox(coordinates, new Vector3(transform.localScale.x / 2,
-                                                             transform.localScale.y / 2,
-                                                             transform.localScale.z / 2), Quaternion.identity, whatIsNotPlane);
+                                                              transform.localScale.y / 2,
+                                                              transform.localScale.z / 2), Quaternion.identity, whatIsInteractive);
         }
     }
 }

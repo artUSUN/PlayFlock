@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6cd1486a4e5cd4184bea24a0e540b5, type: 3}
-  m_Name: Event_Vector2_OnDoublePush
+  m_Script: {fileID: 11500000, guid: a514c00d17c97ac429f576ad3c9e9de4, type: 3}
+  m_Name: Void_OnClickUp
   m_EditorClassIdentifier: 

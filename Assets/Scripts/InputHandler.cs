@@ -1,55 +1,58 @@
 ﻿using SOEvents;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 
 namespace PlayFlock
 {
-    public class InputHandler : MonoBehaviour, IDragHandler, IPointerClickHandler, IEndDragHandler, IScrollHandler, IPointerDownHandler
+    public class InputHandler : MonoBehaviour, IDragHandler, IPointerClickHandler, IEndDragHandler, IPointerUpHandler, IPointerDownHandler
     {
-        [SerializeField] private float clickDelay = 0.3f;
-        
-        [Header("Events")]
-        [SerializeField] private Vector2Event event_OnePushPos;
-        [SerializeField] private Vector2Event event_DoublePushPos;
-        [SerializeField] private Vector2Event event_DragPos;
-        [SerializeField] private Vector2Event event_EndDragPos;
-        [SerializeField] private Vector2Event event_ScrollDelta;
-
-        
+        [SerializeField] private InputEvents events;
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (eventData.clickCount == 1)
+            {
+                events.OneClickPos.Raise(eventData.position);
+            }
 
             if (eventData.clickCount >= 2)
             {
-                event_DoublePushPos.Raise(eventData.position);
-                Debug.Log("double click " + eventData.position);
+                events.DoubleClickPos.Raise(eventData.position);
             }
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            event_DragPos.Raise(eventData.position);
-            Debug.Log("Dragging " + eventData.position);
+            events.DragPos.Raise(eventData.position);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            event_EndDragPos.Raise(eventData.position);
-            Debug.Log("Drag ended in " + eventData.position);
-        }
-
-        public void OnScroll(PointerEventData eventData)
-        {
-            event_ScrollDelta.Raise(eventData.scrollDelta);
-            Debug.Log("scrolling " + eventData.scrollDelta);
+            events.EndDrag.Raise(); 
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            event_OnePushPos.Raise(eventData.position);
-            Debug.Log("one click " + eventData.position); 
+            events.ClickDownPos.Raise(eventData.position);
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            events.ClickUp.Raise();
         }
     }
+
+    [Serializable]
+    public struct InputEvents
+    {
+        public Vector2Event OneClickPos;
+        public Vector2Event DoubleClickPos;
+        public Vector2Event DragPos;
+        public VoidEvent EndDrag;
+        public Vector2Event ClickDownPos;
+        public VoidEvent ClickUp;
+    }
+
 }
