@@ -1,4 +1,4 @@
-﻿using PlayFlock.GameLogic;
+﻿using PlayFlock.MainGameLogic;
 using UnityEngine;
 
 namespace PlayFlock
@@ -11,7 +11,7 @@ namespace PlayFlock
         private void Start()
         {
             rend = GetComponent<Renderer>();
-            rend.material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f));
+            rend.material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.2f, 1f, 1f, 1f));
         }
 
         public bool TryPlace(Vector3 coordinates)

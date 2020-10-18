@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PlayFlock.GameLogic
+namespace PlayFlock.MainGameLogic
 {
     public class Spawner : MonoBehaviour
     {

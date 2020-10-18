@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Scripting.APIUpdating;
+﻿using UnityEngine;
 
-namespace PlayFlock.GameLogic
+namespace PlayFlock.MainGameLogic
 {
     public class Relocator : MonoBehaviour
     {
         [SerializeField] private float closeDistanse = 5f;
         [SerializeField] private float farStep = 0.5f;
         [SerializeField] private float closeStep = 0.02f;
-        [SerializeField] private LayerMask whatIsInteractive;
 
+        private LayerMask whatIsInteractive;
         private const int interactiveLayer = 9, selectedObjectLayer = 10;
         private Transform target;
         private IRelocateable relocateableScript;
@@ -53,20 +49,20 @@ namespace PlayFlock.GameLogic
                         newPos = Vector3.MoveTowards(target.position, lastHitPosition, farStep);
                         if (relocateableScript.TryPlace(newPos)) target.position = newPos;
                     }
-                    //then try move slow
+                    //then try to move slowly
                     newPos = Vector3.MoveTowards(target.position, lastHitPosition, closeStep);
                     if (relocateableScript.TryPlace(newPos)) target.position = newPos;
                     //if cant, try to move only on x or y
                     else
                     {
                         float new_XPos = Mathf.MoveTowards(target.position.x, lastHitPosition.x, closeStep);
-                        float new_YPos = Mathf.MoveTowards(target.position.y, lastHitPosition.y, closeStep);
+                        float new_ZPos = Mathf.MoveTowards(target.position.z, lastHitPosition.z, closeStep);
 
                         Vector3 newVector3_TryChangeX = new Vector3(new_XPos, target.position.y, target.position.z);
-                        Vector3 newVector3_TryChangeY = new Vector3(target.position.x, new_YPos, target.position.z);
+                        Vector3 newVector3_TryChangeZ = new Vector3(target.position.x, target.position.y, new_ZPos);
 
                         if (relocateableScript.TryPlace(newVector3_TryChangeX)) target.position = newVector3_TryChangeX;
-                        else if (relocateableScript.TryPlace(newVector3_TryChangeY)) target.position = newVector3_TryChangeY;
+                        else if (relocateableScript.TryPlace(newVector3_TryChangeZ)) target.position = newVector3_TryChangeZ;
                     }
                 }
             }

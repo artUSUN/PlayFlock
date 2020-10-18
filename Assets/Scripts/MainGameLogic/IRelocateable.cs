@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace PlayFlock.GameLogic
+namespace PlayFlock.MainGameLogic
 {
-    public interface ISpawnable
+    public interface IRelocateable
     {
         bool TryPlace(Vector3 coordinates);
     }
