@@ -345,6 +345,7 @@ Transform:
   - {fileID: 1398327356}
   - {fileID: 1620491238}
   - {fileID: 1608224581}
+  - {fileID: 1403060885}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -690,7 +691,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnablePrefab: {fileID: 5445734226801292700, guid: 56d110de4c4985d4795918fb3cc8278a,
     type: 3}
-  containerForSpawnedObj: {fileID: 2119038458}
+  containerForSpawnedObjects: {fileID: 2119038458}
+  spawnPlaneLayer:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!1 &1403060884
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1403060885}
+  m_Layer: 0
+  m_Name: Grouper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1403060885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403060884}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 549066435}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1608224580
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,9 +898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ae3ac3bcf4e28d4a9edcc6a77562672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closeDistanse: 2.5
-  farStep: 0.5
-  closeStep: 0.02
+  closeStep: 1
 --- !u!114 &1620491241
 MonoBehaviour:
   m_ObjectHideFlags: 0

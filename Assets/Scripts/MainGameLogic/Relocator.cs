@@ -4,31 +4,27 @@ namespace PlayFlock.MainGameLogic
 {
     public class Relocator : MonoBehaviour
     {
-        [SerializeField] private float closeDistanse = 5f;
-        [SerializeField] private float farStep = 0.5f;
         [SerializeField] private float closeStep = 0.02f;
 
-        private LayerMask whatIsInteractive;
-        private const int interactiveLayer = 9, selectedObjectLayer = 10;
+        private const int ignoreRaycastLayer = 2; 
+        private int selectedObjectLayer;
         private Transform target;
         private IRelocateable relocateableScript;
         private bool isSelectedRelocateble = false, needRelocateTarget = false;
         private Vector3 lastHitPosition;
 
-        private void Start()
-        {
-            whatIsInteractive = LayerMask.GetMask("Interactive");
-        }
 
         //Listen to OnClickedDown from Raycaster
         public void SelectTarget(RaycastHit hitInfo)
         {
-            if (1 << hitInfo.collider.gameObject.layer == whatIsInteractive.value)
+            relocateableScript = hitInfo.transform.GetComponent<IRelocateable>();
+
+            if (relocateableScript != null)
             {
+                target = hitInfo.transform;
                 isSelectedRelocateble = true;
-                target = hitInfo.collider.transform;
-                target.gameObject.layer = selectedObjectLayer;
-                relocateableScript = target.GetComponent<IRelocateable>();
+                selectedObjectLayer = target.gameObject.layer;
+                target.gameObject.layer = ignoreRaycastLayer;
             }
         }
 
@@ -36,33 +32,26 @@ namespace PlayFlock.MainGameLogic
         {
             if (needRelocateTarget)
             {
-                //try to relocate to mouse pos
                 if (relocateableScript.TryPlace(lastHitPosition)) target.position = lastHitPosition;
-                //if cant
                 else
                 {
-                    Vector3 delta = target.position - lastHitPosition;
-                    Vector3 newPos;
-                    //check distance between center of object and mouse pos, and if it large - move obj fast
-                    if (delta.sqrMagnitude > closeDistanse)
-                    {
-                        newPos = Vector3.MoveTowards(target.position, lastHitPosition, farStep);
-                        if (relocateableScript.TryPlace(newPos)) target.position = newPos;
-                    }
-                    //then try to move slowly
-                    newPos = Vector3.MoveTowards(target.position, lastHitPosition, closeStep);
-                    if (relocateableScript.TryPlace(newPos)) target.position = newPos;
-                    //if cant, try to move only on x or y
-                    else
-                    {
-                        float new_XPos = Mathf.MoveTowards(target.position.x, lastHitPosition.x, closeStep);
-                        float new_ZPos = Mathf.MoveTowards(target.position.z, lastHitPosition.z, closeStep);
+                    //try teleport to 
+                    var newVector3_TryChangeX = new Vector3(lastHitPosition.x, target.position.y, target.position.z);
+                    var newVector3_TryChangeZ = new Vector3(target.position.x, target.position.y, lastHitPosition.z);
 
-                        Vector3 newVector3_TryChangeX = new Vector3(new_XPos, target.position.y, target.position.z);
-                        Vector3 newVector3_TryChangeZ = new Vector3(target.position.x, target.position.y, new_ZPos);
+                    SetPosition(newVector3_TryChangeX, out bool successX);
+                    SetPosition(newVector3_TryChangeZ, out bool successY);
+
+                    if ((successX | successY) == false)
+                    {
+                        float new_XPos = Mathf.MoveTowards(target.position.x, lastHitPosition.x, closeStep * Time.deltaTime);
+                        float new_ZPos = Mathf.MoveTowards(target.position.z, lastHitPosition.z, closeStep * Time.deltaTime);
+
+                        newVector3_TryChangeX = new Vector3(new_XPos, target.position.y, target.position.z);
+                        newVector3_TryChangeZ = new Vector3(target.position.x, target.position.y, new_ZPos);
 
                         if (relocateableScript.TryPlace(newVector3_TryChangeX)) target.position = newVector3_TryChangeX;
-                        else if (relocateableScript.TryPlace(newVector3_TryChangeZ)) target.position = newVector3_TryChangeZ;
+                        if (relocateableScript.TryPlace(newVector3_TryChangeZ)) target.position = newVector3_TryChangeZ;
                     }
                 }
             }
@@ -86,10 +75,21 @@ namespace PlayFlock.MainGameLogic
             {
                 needRelocateTarget = false;
                 isSelectedRelocateble = false;
-                target.gameObject.layer = interactiveLayer;
+                target.gameObject.layer = selectedObjectLayer;
                 target = null;
                 relocateableScript = null;
             }
+        }
+
+        private void SetPosition(Vector3 pos)
+        {
+            if (relocateableScript.TryPlace(pos)) target.position = pos;
+        }
+
+        private void SetPosition(Vector3 pos, out bool isPosSet)
+        {
+            isPosSet = relocateableScript.TryPlace(pos);
+            if (isPosSet) target.position = pos;
         }
     }
 }
