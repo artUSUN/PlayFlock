@@ -6,7 +6,7 @@ namespace PlayFlock.MainGameLogic
 {
     public class Group : MonoBehaviour
     {
-        private List<IGroupable> elements;
+        private List<GroupElement> elements;
 
         private Group()
         {
@@ -15,19 +15,20 @@ namespace PlayFlock.MainGameLogic
 
         private void Start()
         {
-            elements = new List<IGroupable>();
+            elements = new List<GroupElement>();
         }
 
-        public void Add(IGroupable element)
+        public void Add(Transform element, IGroupable elementScript)
         {
-            elements.Add(element);
-            element.AddInGroup(this);
+            elements.Add(new GroupElement(element, elementScript, element.parent));
+            element.SetParent(transform);
+            elementScript.AddInGroup(this);
         }
 
-        public void Add(IGroupable element1, IGroupable element2)
+        public void Add(Transform element1, IGroupable elementScript1, Transform element2, IGroupable elementScript2)
         {
-            elements.Add(element1);
-            elements.Add(element2);
+            Add(element1, elementScript1);
+            Add(element2, elementScript2);
         }
     }
 }

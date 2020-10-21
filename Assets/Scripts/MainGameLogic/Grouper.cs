@@ -14,13 +14,16 @@ namespace PlayFlock.MainGameLogic
         private Transform firstElement, secondElement;
         private IGroupable firstScript, secondScript;
 
-
         //Listen to OnOneClicked from Raycaster
         public void CheckState(RaycastHit hitInfo)
         {
-            firstScript = hitInfo.transform.GetComponent<IGroupable>();
+            var groupableCheck = hitInfo.transform.GetComponent<IGroupable>();
 
-            if (firstScript != null && isGrouping == false) StartGrouping(hitInfo);
+            if (groupableCheck != null && isGrouping == false)
+            {
+                firstScript = groupableCheck;
+                StartGrouping(hitInfo);
+            }
             else StopGrouping(hitInfo);
         }
          
@@ -34,51 +37,56 @@ namespace PlayFlock.MainGameLogic
         private void StopGrouping(RaycastHit hitInfo)
         {
             secondElement = hitInfo.transform;
+            secondScript = secondElement.GetComponent<IGroupable>();
 
-            if (firstScript == null) GroupingFailed();
-            else if (secondElement == firstElement) GroupingFailed();
-            else
+            //If at least one object is not groupable then failure
+            if (firstScript == null || secondScript == null) GroupingEnded();
+            //Else if it is the same object then failure
+            else if (secondElement == firstElement) GroupingEnded();
+            //Else try to group
+            else TryToGroup(firstScript, secondScript);
+        }
+
+        private void TryToGroup(IGroupable first, IGroupable second)
+        {
+            if (!first.IsInGroup() && !second.IsInGroup())
             {
-                IGroupable first = firstElement.GetComponent<IGroupable>();
-                IGroupable second = secondElement.GetComponent<IGroupable>();
-
-                if (!first.IsInGroup() && !second.IsInGroup())
-                {
-                    CreateNewGroup(first, second);
-                    return;
-                }
-                if (first.IsInGroup() && !second.IsInGroup())
-                {
-                    AddElementInGroup(first.GetGroup(), second); //делигировать груп скрипту
-                    return;
-                }
-                if (!first.IsInGroup() && second.IsInGroup())
-                {
-                    AddElementInGroup(second.GetGroup(), first); //делигировать груп скрипту
-                    return;
-                }
-                if (first.IsInGroup() && second.IsInGroup())
-                {
-                    if (first.GetGroup() == second.GetGroup()) MergeGroups(first.GetGroup(), second.GetGroup());
-                    else GroupingFailed();
+                CreateNewGroup(first, second);
+                return;
+            }
+            if (first.IsInGroup() && !second.IsInGroup())
+            {
+                AddElementInGroup(firstElement, secondElement); //делигировать груп скрипту
+                return;
+            }
+            if (!first.IsInGroup() && second.IsInGroup())
+            {
+                AddElementInGroup(secondElement, firstElement); //делигировать груп скрипту
+                return;
+            }
+            if (first.IsInGroup() && second.IsInGroup())
+            {
+                if (first.GetGroup() != second.GetGroup()) MergeGroups(first.GetGroup(), second.GetGroup());
+                else
+                { 
+                    //check chain
                 }
             }
         }
 
-        private void AddElementInGroup(Group group, IGroupable element)
+        private void AddElementInGroup(Transform elementInGroup, Transform elementWithoutGroup)
         {
-            throw new NotImplementedException();
+            //add in group
         }
 
         private void CreateNewGroup(IGroupable first, IGroupable second)
         {
-            //event GroupCreated(send second element tansform)
+            //event GroupCreated(send second element tansform) - ненад
             var group = new GameObject(groupName);
             group.transform.SetParent(containterForGroups);
             var groupScript = group.AddComponent<Group>();
-            groupScript.Add(first, second);
-            firstElement.SetParent(group.transform);
-            secondElement.SetParent(group.transform);
+            groupScript.Add(firstElement, first, secondElement, second); //заменить адд на create
+            GroupingEnded();
         }
 
         private void MergeGroups(Group group1, Group group2)
@@ -86,18 +94,14 @@ namespace PlayFlock.MainGameLogic
             throw new NotImplementedException();
         }
 
-        private void GroupingFailed()
+        private void GroupingEnded()
         {
             isGrouping = false;
             firstElement = null;
             secondElement = null;
-            //grouping failed event void
-        }
-
-        private bool IsHitTagetIsGroupable(RaycastHit hit)
-        {
-            IGroupable fir = hit.transform.GetComponent<IGroupable>();
-            return fir != null;
+            firstScript = null;
+            secondScript = null;
+            //grouping ended event void
         }
     }
 }

@@ -15,7 +15,6 @@ namespace PlayFlock
             if (eventData.clickCount == 1)
             {
                 events.OneClickPos.Raise(eventData.position);
-                Debug.Log("Click");
             }
 
             if (eventData.clickCount >= 2)
