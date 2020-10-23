@@ -42,7 +42,7 @@ namespace PlayFlock.MainGameLogic
                     SetPosition(newVector3_TryChangeX, out bool successX);
                     SetPosition(newVector3_TryChangeZ, out bool successY);
 
-                    if ((successX | successY) == false)
+                    if ((successX & successY) == false)
                     {
                         float new_XPos = Mathf.MoveTowards(target.position.x, lastHitPosition.x, closeStep * Time.deltaTime);
                         float new_ZPos = Mathf.MoveTowards(target.position.z, lastHitPosition.z, closeStep * Time.deltaTime);

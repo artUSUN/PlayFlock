@@ -1,31 +1,42 @@
 ﻿using PlayFlock.MainGameLogic;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace PlayFlock
 {
-    public abstract class InteractiveObject : MonoBehaviour, ISpawnable, IDestroyable, IRelocateable, IGroupable
+    public abstract class InteractiveObject : MonoBehaviour, ISpawnable, IDestroyable, IRelocateable, IBindable
     {
-        private bool isInGroup = false;
-        private Group group;
+        protected string bindingPointName = "Binding Point";
+        public Dictionary<IBindable, Transform> Bindings { get; protected set; }
+
+        protected virtual void Start()
+        {
+            Bindings = new Dictionary<IBindable, Transform>();
+        }
 
         public abstract bool TryPlace(Vector3 coordinates);
 
         public virtual void Destroy() { Destroy(gameObject); }
 
-        public virtual bool IsInGroup() { return isInGroup; }
-
-        public virtual Group GetGroup() { return group; }
-
-        public virtual void AddInGroup(Group group)
+        public virtual bool IsInBindWith(IBindable target)
         {
-            this.group = group;
-            isInGroup = true;
+            return Bindings.ContainsKey(target);
         }
 
-        public virtual void RemoveFromGroup()
+        public virtual void AddBind(IBindable partner, out Transform bindingPoint)
         {
-            this.group = null;
-            isInGroup = false;
+            var point = new GameObject(bindingPointName);
+            point.transform.SetParent(transform);
+            Bindings.Add(partner, point.transform);
+            bindingPoint = point.transform;
+        }
+
+        public virtual void RemoveBind(IBindable partner)
+        {
+            var point = Bindings[partner];
+            Bindings.Remove(partner);
+            Destroy(point.gameObject);
         }
     }
 }

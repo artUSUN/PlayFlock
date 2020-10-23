@@ -8,8 +8,9 @@ namespace PlayFlock
         [SerializeField] private LayerMask whatIsInteractive;
         private Renderer rend;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             rend = GetComponent<Renderer>();
             rend.material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.2f, 1f, 1f, 1f));
         }

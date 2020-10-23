@@ -735,9 +735,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1403060885}
   - component: {fileID: 1403060887}
-  - component: {fileID: 1403060886}
+  - component: {fileID: 1403060888}
   m_Layer: 0
-  m_Name: Grouper
+  m_Name: Binder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -757,33 +757,6 @@ Transform:
   m_Father: {fileID: 549066435}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1403060886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403060884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d1660f4d3b90d40b933c15d1f5d0b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameEvent: {fileID: 11400000, guid: 68c991b9481261c4fb79054328b2a50d, type: 2}
-  unityEventResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1403060887}
-        m_MethodName: CheckState
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1403060887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,7 +769,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b96a123d2b8f1bd4db952e798412223e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  containterForGroups: {fileID: 691733992}
+  events:
+    BindingStarted: {fileID: 11400000, guid: fe1e91241d8bd35479f89f560975e59c, type: 2}
+    BindingFinished: {fileID: 11400000, guid: 2b0637d6d998d84488f65c4dde099db0, type: 2}
+    BindingSuccess: {fileID: 11400000, guid: 8739bd86491601240a3c3b23d8d13017, type: 2}
+--- !u!114 &1403060888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1403060884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d1660f4d3b90d40b933c15d1f5d0b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 7a9a30bf5b8a0e448bb456ec5383a4e1, type: 2}
+  unityEventResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1403060887}
+        m_MethodName: OnOneClick
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1608224580
 GameObject:
   m_ObjectHideFlags: 0
