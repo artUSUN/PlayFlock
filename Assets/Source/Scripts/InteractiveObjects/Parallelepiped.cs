@@ -2,6 +2,7 @@
 
 namespace PlayFlock.InteractiveObjects
 {
+    [RequireComponent(typeof(Renderer))]
     public class Parallelepiped : InteractiveObject
     {
         [SerializeField] private LayerMask whatIsInteractive;

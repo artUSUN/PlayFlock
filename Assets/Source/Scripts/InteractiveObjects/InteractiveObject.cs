@@ -4,14 +4,17 @@ using UnityEngine;
 
 namespace PlayFlock.InteractiveObjects
 {
-    public abstract class InteractiveObject : MonoBehaviour, ISpawnable, IDestroyable, IRelocateable, IBindable
+    [RequireComponent(typeof(Outline))]
+    public abstract class InteractiveObject : MonoBehaviour, ISpawnable, IDestroyable, IRelocateable, IBindable, ISelectable
     {
+        protected Outline outline;
         protected string bindingPointName = "Binding Point";
         public Dictionary<IBindable, Transform> Bindings { get; protected set; }
 
         protected virtual void Awake()
         {
             Bindings = new Dictionary<IBindable, Transform>();
+            outline = GetComponent<Outline>();
         }
 
         public abstract bool TryPlace(Vector3 coordinates);
@@ -36,6 +39,16 @@ namespace PlayFlock.InteractiveObjects
             var point = Bindings[partner];
             Bindings.Remove(partner);
             Destroy(point.gameObject);
+        }
+
+        public void DrawOutline()
+        {
+            outline.enabled = true;
+        }
+
+        public void EraseOutline()
+        {
+            outline.enabled = false;
         }
     }
 }
