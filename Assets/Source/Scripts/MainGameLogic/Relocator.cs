@@ -4,7 +4,6 @@ namespace PlayFlock.MainGameLogic
 {
     public class Relocator : MonoBehaviour
     {
-        [SerializeField] private float closeStep = 0.02f;
         [SerializeField] private int iterations = 50;
 
         private const int ignoreRaycastLayer = 2; 
