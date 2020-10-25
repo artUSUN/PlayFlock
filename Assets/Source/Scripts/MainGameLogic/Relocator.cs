@@ -36,22 +36,10 @@ namespace PlayFlock.MainGameLogic
                 if (relocateableScript.TryPlace(lastHitPosition)) relocateable.position = lastHitPosition;
                 else
                 {
+                    #region Trying to find the closest point to spawn
                     bool canSpawn;
                     Vector3 lastAvailableSpawnPos = relocateable.position;
                     Vector3 step = (lastHitPosition - relocateable.position)/iterations;
-                    
-
-                    //for (int i = 0; i < iterations; i++)
-                    //{
-                    //    lastAvailableSpawnPos = relocateable.position + step;
-                    //    canSpawn = relocateableScript.TryPlace(lastAvailableSpawnPos);
-                    //    if (canSpawn) 
-                    //    {
-                    //        relocateable.position = lastAvailableSpawnPos;
-                    //        break;
-                    //    }
-                    //}
-
                     do
                     {
                         lastAvailableSpawnPos += step;
@@ -59,7 +47,9 @@ namespace PlayFlock.MainGameLogic
                     } while (canSpawn);
 
                     relocateable.position = lastAvailableSpawnPos - step;
+                    #endregion
 
+                    //Trying to follow mouse pointer on each side
                     if (relocateable.position.x != lastHitPosition.x)
                     {
                         float lastAvailableSpawnPos_x = relocateable.position.x;
@@ -75,7 +65,6 @@ namespace PlayFlock.MainGameLogic
                         }
                         relocateable.position = new Vector3(lastAvailableSpawnPos_x, relocateable.position.y, relocateable.position.z);
                     }
-
                     if (relocateable.position.z != lastHitPosition.z)
                     {
                         float lastAvailableSpawnPos_z = relocateable.position.z;
@@ -93,28 +82,6 @@ namespace PlayFlock.MainGameLogic
                         relocateable.position = new Vector3(relocateable.position.x, relocateable.position.y, lastAvailableSpawnPos_z);
                     }
                 }
-
-                //else
-                //{
-                //    //try teleport to 
-                //    var newVector3_TryChangeX = new Vector3(lastHitPosition.x, target.position.y, target.position.z);
-                //    var newVector3_TryChangeZ = new Vector3(target.position.x, target.position.y, lastHitPosition.z);
-
-                //    SetPosition(newVector3_TryChangeX, out bool successX);
-                //    SetPosition(newVector3_TryChangeZ, out bool successY);
-
-                //    if ((successX & successY) == false)
-                //    {
-                //        float new_XPos = Mathf.MoveTowards(target.position.x, lastHitPosition.x, closeStep * Time.deltaTime);
-                //        float new_ZPos = Mathf.MoveTowards(target.position.z, lastHitPosition.z, closeStep * Time.deltaTime);
-
-                //        newVector3_TryChangeX = new Vector3(new_XPos, target.position.y, target.position.z);
-                //        newVector3_TryChangeZ = new Vector3(target.position.x, target.position.y, new_ZPos);
-
-                //        if (relocateableScript.TryPlace(newVector3_TryChangeX)) target.position = newVector3_TryChangeX;
-                //        if (relocateableScript.TryPlace(newVector3_TryChangeZ)) target.position = newVector3_TryChangeZ;
-                //    }
-                //}
             }
         }
         
