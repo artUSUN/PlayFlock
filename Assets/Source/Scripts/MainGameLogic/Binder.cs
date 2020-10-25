@@ -9,8 +9,13 @@ namespace PlayFlock.MainGameLogic
         [SerializeField] private BinderEvents events;
 
         private IBindable firstElementScript, secondElementScript;
-        private BinderState currentState = BinderState.Waiting;
+        private BinderState currentState, pastState;
         private Transform firstElementTransform;
+
+        private void Awake()
+        {
+            
+        }
 
         //Listen to OnOneClick from Raycaster
         public void OnOneClick(RaycastHit hitInfo)
@@ -24,8 +29,8 @@ namespace PlayFlock.MainGameLogic
                         if (firstElementScript != null)
                         {
                             currentState = BinderState.Binding;
-                            events.BindingStarted.Raise(firstElementTransform);
                             firstElementTransform = hitInfo.transform;
+                            events.BindingStarted.Raise(firstElementTransform);
                         }
                     }
                     break;
@@ -41,6 +46,12 @@ namespace PlayFlock.MainGameLogic
                     }
                     break;
             }
+        }
+
+        //Listen to OnDoubleClick from Raycaster
+        public void OnDoubleClick()
+        {
+            FinishBinding();
         }
 
         private void RemoveBind()

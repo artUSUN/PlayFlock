@@ -1,16 +1,15 @@
 ﻿using PlayFlock.MainGameLogic;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace PlayFlock
+namespace PlayFlock.InteractiveObjects
 {
     public abstract class InteractiveObject : MonoBehaviour, ISpawnable, IDestroyable, IRelocateable, IBindable
     {
         protected string bindingPointName = "Binding Point";
         public Dictionary<IBindable, Transform> Bindings { get; protected set; }
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             Bindings = new Dictionary<IBindable, Transform>();
         }
@@ -27,7 +26,7 @@ namespace PlayFlock
         public virtual void AddBind(IBindable partner, out Transform bindingPoint)
         {
             var point = new GameObject(bindingPointName);
-            point.transform.SetParent(transform);
+            point.transform.SetParent(transform, false);
             Bindings.Add(partner, point.transform);
             bindingPoint = point.transform;
         }

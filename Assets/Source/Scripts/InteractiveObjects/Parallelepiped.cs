@@ -1,16 +1,15 @@
-﻿using PlayFlock.MainGameLogic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace PlayFlock
+namespace PlayFlock.InteractiveObjects
 {
     public class Parallelepiped : InteractiveObject
     {
         [SerializeField] private LayerMask whatIsInteractive;
         private Renderer rend;
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             rend = GetComponent<Renderer>();
             rend.material.SetColor("_Color", Random.ColorHSV(0f, 1f, 1f, 1f, 0.2f, 1f, 1f, 1f));
         }
