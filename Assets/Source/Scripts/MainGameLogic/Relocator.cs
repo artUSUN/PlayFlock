@@ -10,9 +10,6 @@ namespace PlayFlock.MainGameLogic
         private int selectedObjectLayer;
         private Transform relocateable;
         private IRelocateable relocateableScript;
-        private bool isSelectedRelocateble = false, needRelocateTarget = false;
-        private Vector3 lastHitPosition;
-
 
         //Listen to OnClickedDown from Raycaster
         public void SelectTarget(RaycastHit hitInfo)
@@ -22,23 +19,24 @@ namespace PlayFlock.MainGameLogic
             if (relocateableScript != null)
             {
                 relocateable = hitInfo.transform;
-                isSelectedRelocateble = true;
                 selectedObjectLayer = relocateable.gameObject.layer;
                 relocateable.gameObject.layer = ignoreRaycastLayer;
             }
         }
 
-        private void Update()
+        //Listen to OnDrag from Raycaster
+        public void RelocateTarget(RaycastHit hitInfo)
         {
-            if (needRelocateTarget)
+            if (relocateableScript != null)
             {
-                if (relocateableScript.TryPlace(lastHitPosition)) relocateable.position = lastHitPosition;
+                Vector3 hitPosition = hitInfo.point;
+                if (relocateableScript.TryPlace(hitPosition)) relocateable.position = hitPosition;
                 else
                 {
                     #region Trying to find the closest point to spawn
                     bool canSpawn;
                     Vector3 lastAvailableSpawnPos = relocateable.position;
-                    Vector3 step = (lastHitPosition - relocateable.position)/iterations;
+                    Vector3 step = (hitPosition - relocateable.position) / iterations;
                     do
                     {
                         lastAvailableSpawnPos += step;
@@ -49,10 +47,10 @@ namespace PlayFlock.MainGameLogic
                     #endregion
 
                     //Trying to follow mouse pointer on each side
-                    if (relocateable.position.x != lastHitPosition.x)
+                    if (relocateable.position.x != hitPosition.x)
                     {
                         float lastAvailableSpawnPos_x = relocateable.position.x;
-                        float stepX = (lastHitPosition.x - relocateable.position.x) / iterations;
+                        float stepX = (hitPosition.x - relocateable.position.x) / iterations;
                         for (int i = 0; i < iterations; i++)
                         {
                             lastAvailableSpawnPos_x += stepX;
@@ -64,10 +62,10 @@ namespace PlayFlock.MainGameLogic
                         }
                         relocateable.position = new Vector3(lastAvailableSpawnPos_x, relocateable.position.y, relocateable.position.z);
                     }
-                    if (relocateable.position.z != lastHitPosition.z)
+                    if (relocateable.position.z != hitPosition.z)
                     {
                         float lastAvailableSpawnPos_z = relocateable.position.z;
-                        float stepZ = (lastHitPosition.z - relocateable.position.z) / iterations;
+                        float stepZ = (hitPosition.z - relocateable.position.z) / iterations;
 
                         for (int i = 0; i < iterations; i++)
                         {
@@ -83,40 +81,16 @@ namespace PlayFlock.MainGameLogic
                 }
             }
         }
-        
-
-        //Listen to OnDrag from Raycaster
-        public void RelocateTarget(RaycastHit hitInfo)
-        {
-            if (isSelectedRelocateble)
-            {
-                needRelocateTarget = true;
-                lastHitPosition = hitInfo.point;
-            }   
-        }
 
         //Listen to ClickedUp from Input
         public void UnselectTarget()
         {
-            if (isSelectedRelocateble)
+            if (relocateableScript != null)
             {
-                needRelocateTarget = false;
-                isSelectedRelocateble = false;
                 relocateable.gameObject.layer = selectedObjectLayer;
                 relocateable = null;
                 relocateableScript = null;
             }
-        }
-
-        private void SetPosition(Vector3 pos)
-        {
-            if (relocateableScript.TryPlace(pos)) relocateable.position = pos;
-        }
-
-        private void SetPosition(Vector3 pos, out bool isPosSet)
-        {
-            isPosSet = relocateableScript.TryPlace(pos);
-            if (isPosSet) relocateable.position = pos;
         }
     }
 }
